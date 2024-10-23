@@ -1,7 +1,4 @@
 from PyQt5.QtWidgets import QGridLayout, QTableWidget, QWidget
-from PyQt5.QtCore import Qt
-
-from gui.book_widget import BookShowWidget
 
 
 class BookShelveShowWidget(QWidget):

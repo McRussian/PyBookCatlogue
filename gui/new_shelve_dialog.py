@@ -2,16 +2,16 @@ from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtWidgets import QLabel, QLineEdit, QDialog, QDialogButtonBox, QGridLayout
 
 
-class NewShelveWidget(QDialog):
-    def __init__(self, parent=None):
+class NewItemDialog(QDialog):
+    def __init__(self, title: str, name: str, parent=None):
         super().__init__(parent)
         self.setFixedSize(QSize(300, 150))
         self.__name_book_shelve: str = ''
-        self.setWindowTitle("New Book Shelve!")
+        self.setWindowTitle(title)
         self.__main_grid = QGridLayout()
         self.__lbl_name = QLabel()
         self.__lbl_name.setFixedSize(QSize(140, 30))
-        self.__lbl_name.setText('Имя книжной полки:')
+        self.__lbl_name.setText(f'{name}:')
         self.__lbl_name.setAlignment(Qt.AlignRight)
         self.__main_grid.addWidget(self.__lbl_name, 0, 0, 1, 1)
 

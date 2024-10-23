@@ -9,11 +9,13 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
+from gui.authors_widget import AuthorShowDialog
 from gui.book_shelve import BookShelveShowWidget
 from gui.information_widget import BookCatalogueInformationWidget
-from gui.new_shelve_dialog import NewShelveWidget
+from gui.new_shelve_dialog import NewItemDialog
 from gui.simple_search_widget import SimpleSearchWidget
 
+from models.author import Author
 
 class BookCatalogueMainWindow(QMainWindow):
     def __init__(self):
@@ -53,7 +55,10 @@ class BookCatalogueMainWindow(QMainWindow):
         book_menu.addAction('Search')
 
         author_menu = db_menu.addMenu('Authors')
-        author_menu.addAction('New')
+        new_author = QAction('New', self)
+        new_author.setStatusTip('Create a new author')
+        author_menu.addAction(new_author)
+        new_author.triggered.connect(self.__add_new_author)
         author_menu.addAction('Search')
 
         import_menu = db_menu.addMenu('Imports')
@@ -63,8 +68,8 @@ class BookCatalogueMainWindow(QMainWindow):
 
         shelve_menu = QMenu("&BookShelve", self)
         menu_bar.addMenu(shelve_menu)
-        new_shelve = (QAction('New', self))
-        new_shelve.setStatusTip('Create a new document')
+        new_shelve = QAction('New', self)
+        new_shelve.setStatusTip('Create a new book shelve')
         shelve_menu.addAction(new_shelve)
         new_shelve.triggered.connect(self.__add_new_book_shelve)
         shelve_menu.addAction('Edit')
@@ -79,17 +84,17 @@ class BookCatalogueMainWindow(QMainWindow):
         self.setMenuBar(menu_bar)
 
     def __add_new_book_shelve(self):
-        print('Add New shelve')
-        dlg = NewShelveWidget(self)
+        dlg = NewItemDialog('New Book Shelve', 'Name of Book Shelve', self)
         if not dlg.exec():
-            print("Cancel!")
             return
-
-        print("Success!")
         name = dlg.name
-        print(name)
         if name in self.__shelves:
             return
         self.__shelves[name] = BookShelveShowWidget(name)
         self.__main_shelve_tab.addTab(self.__shelves[name], name)
-        print('close new shelve')
+
+    def __add_new_author(self):
+        dlg = AuthorShowDialog(Author(), self)
+        if not dlg.exec():
+            return
+        author = dlg.author
