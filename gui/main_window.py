@@ -1,5 +1,6 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (
+    QAction,
     QGridLayout,
     QMainWindow,
     QMenu,
@@ -10,6 +11,7 @@ from PyQt5.QtWidgets import (
 
 from gui.book_shelve import BookShelveShowWidget
 from gui.information_widget import BookCatalogueInformationWidget
+from gui.new_shelve_dialog import NewShelveWidget
 from gui.simple_search_widget import SimpleSearchWidget
 
 
@@ -21,6 +23,7 @@ class BookCatalogueMainWindow(QMainWindow):
         self.__init_main_menu()
         self.__init_main_widget()
 
+        self.__shelves: dict[str, BookShelveShowWidget] = {}
 
     def __init_main_widget(self):
         self.__centralWidget = QWidget()
@@ -60,7 +63,10 @@ class BookCatalogueMainWindow(QMainWindow):
 
         shelve_menu = QMenu("&BookShelve", self)
         menu_bar.addMenu(shelve_menu)
-        shelve_menu.addAction('New')
+        new_shelve = (QAction('New', self))
+        new_shelve.setStatusTip('Create a new document')
+        shelve_menu.addAction(new_shelve)
+        new_shelve.triggered.connect(self.__add_new_book_shelve)
         shelve_menu.addAction('Edit')
         shelve_menu.addAction('Delete')
 
@@ -71,3 +77,19 @@ class BookCatalogueMainWindow(QMainWindow):
         menu_bar.addMenu(help_menu)
 
         self.setMenuBar(menu_bar)
+
+    def __add_new_book_shelve(self):
+        print('Add New shelve')
+        dlg = NewShelveWidget(self)
+        if not dlg.exec():
+            print("Cancel!")
+            return
+
+        print("Success!")
+        name = dlg.name
+        print(name)
+        if name in self.__shelves:
+            return
+        self.__shelves[name] = BookShelveShowWidget(name)
+        self.__main_shelve_tab.addTab(self.__shelves[name], name)
+        print('close new shelve')

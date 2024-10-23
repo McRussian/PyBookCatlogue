@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QHBoxLayout, QTableWidget, QWidget
+from PyQt5.QtWidgets import QGridLayout, QTableWidget, QWidget
 from PyQt5.QtCore import Qt
 
 from gui.book_widget import BookShowWidget
@@ -8,22 +8,25 @@ class BookShelveShowWidget(QWidget):
     def __init__(self, name: str):
         super().__init__()
         self.__name_shelve = name
-        self.setMinimumSize(480, 600)
+        self.setMinimumSize(480, 550)
 
-        self.__main_layout = QHBoxLayout(self)
+        self.__main_grid = QGridLayout(self)
 
         self.__wd_statistics = QWidget()
         self.__wd_statistics.setMinimumWidth(100)
-        self.__wd_statistics.setMinimumHeight(590)
-        self.__main_layout.addWidget(self.__wd_statistics, stretch=5, alignment=Qt.AlignLeft)
+        self.__wd_statistics.setMinimumHeight(540)
+        self.__main_grid.addWidget(self.__wd_statistics, 0, 0, 10, 1)
 
         self.__table_books = QTableWidget()
-        self.__table_books.setMinimumSize(270, 590)
-        self.__main_layout.addWidget(self.__table_books, stretch=5, alignment=Qt.AlignCenter)
+        self.__table_books.setMinimumWidth(270)
+        self.__table_books.setMinimumHeight(540)
+        self.__main_grid.addWidget(self.__table_books, 0, 1, 10, 3)
 
         self.__wd_book_info = QWidget()
-        self.__wd_book_info.setMinimumSize(100, 590)
-        self.__main_layout.addWidget(self.__wd_book_info, stretch=5, alignment=Qt.AlignRight)
+        self.__wd_book_info.setMinimumSize(100, 540)
+        self.__main_grid.addWidget(self.__wd_book_info, 0, 4, 10, 1)
+
+        self.setLayout(self.__main_grid)
 
 
     @property
