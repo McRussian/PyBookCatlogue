@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
-from gui.authors_widget import AuthorShowDialog
+from gui.authors_widget import AuthorSearchWidget, AuthorShowDialog
 from gui.book_shelve import BookShelveShowWidget
 from gui.information_widget import BookCatalogueInformationWidget
 from gui.new_shelve_dialog import NewItemDialog
@@ -59,7 +59,10 @@ class BookCatalogueMainWindow(QMainWindow):
         new_author.setStatusTip('Create a new author')
         author_menu.addAction(new_author)
         new_author.triggered.connect(self.__add_new_author)
-        author_menu.addAction('Search')
+        search_author = QAction('Search', self)
+        search_author.setStatusTip('Search authors')
+        search_author.triggered.connect(self.__search_author)
+        author_menu.addAction(search_author)
 
         import_menu = db_menu.addMenu('Imports')
         import_menu.addAction('JSON')
@@ -83,6 +86,8 @@ class BookCatalogueMainWindow(QMainWindow):
 
         self.setMenuBar(menu_bar)
 
+        self.__authors_search = AuthorSearchWidget()
+
     def __add_new_book_shelve(self):
         dlg = NewItemDialog('New Book Shelve', 'Name of Book Shelve', self)
         if not dlg.exec():
@@ -98,3 +103,6 @@ class BookCatalogueMainWindow(QMainWindow):
         if not dlg.exec():
             return
         author = dlg.author
+
+    def __search_author(self):
+        self.__authors_search.show()
